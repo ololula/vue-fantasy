@@ -1,27 +1,55 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Players from '../views/Players.vue';
+import TeamSize from '../views/TeamSize.vue';
+import MatchID from '../views/MatchID.vue';
+import SelectionOfPlayers from '../views/SelectionOfPlayers.vue';
+import CaptainRule from '../views/CaptainRule.vue';
+import ViceCaptainRule from '../views/ViceCaptain.vue';
+import SetPositions from '../views/setPostions';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+	{
+		path: '/',
+		name: 'MatchID',
+		component: MatchID
+	},
+	{
+		path: '/select-players',
+		name: 'SelectionOfPlayers',
+		component: SelectionOfPlayers
+	},
+	{
+		path: '/captain-rule',
+		name: 'CaptainRule',
+		component: CaptainRule
+	},
+	{
+		path: '/vice-captain-rule',
+		name: 'ViceCaptainRule',
+		component: ViceCaptainRule
+	},
+	{
+		path: '/players',
+		name: 'Players',
+		component: Players
+	},
+	{
+		path: '/team-size',
+		name: 'TeamSize',
+		component: TeamSize
+	},
+	{
+		path: '/team-size',
+		name: 'SetPositions',
+		component: SetPositions
+	}
+];
 
 const router = new VueRouter({
-  routes
-})
+	routes
+});
 
-export default router
+export default router;
