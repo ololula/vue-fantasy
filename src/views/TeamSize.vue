@@ -4,7 +4,7 @@
 			<div class="container">
 				<v-card-title>3. Set team Size</v-card-title>
 				<v-form>
-					<v-text-field single-line solo v-model="numberOfCombinations" :counter="10" label="Number of combinations" type="number" required></v-text-field>
+					<v-text-field single-line solo v-model="numberOfCombinations" label="Number of combinations" type="number" required></v-text-field>
 				</v-form>
 
 				<v-btn class="ma-2" @click="setTeamDataMethod" color="primary" dark>Next
@@ -21,7 +21,7 @@ export default {
 	name: 'TeamSize',
 	data() {
 		return {
-			numberOfCombinations: ''
+			numberOfCombinations: 10 // TODO
 		};
 	},
 	computed: {
@@ -31,7 +31,7 @@ export default {
 		setTeamDataMethod() {
 			console.log('here');
 			this.setTeamData([this.teamSize, this.numberOfCombinations]);
-			this.$router.push({ name: 'CaptainRule' });
+			this.$router.push({ name: 'SelectionOfPlayers' });
 		},
 		...mapActions(['setTeamData', 'setSkeleton'])
 	}

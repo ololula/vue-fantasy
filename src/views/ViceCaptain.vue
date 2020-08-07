@@ -2,7 +2,7 @@
 	<div>
 		<v-main>
 			<div class="container">
-				<v-card-title>4. Set Vice Captain Rule</v-card-title>
+				<v-card-title>6. Set Vice Captain Rule</v-card-title>
 				<v-radio-group v-model="captain" :mandatory="false">
 					<v-radio v-for="player in players" :key="player.id" :label="getPlayerName(player)" :value="player"></v-radio>
 				</v-radio-group>
@@ -35,14 +35,15 @@ export default {
 	},
 
 	methods: {
-		...mapActions(['addCaptainRule']),
+		...mapActions(['addCaptainRule', 'resetSumPercantageCounter']),
 		addCaptainRuleMethod() {
 			// true is flag for captain, false is for vice captain
 			this.addCaptainRule([this.captain, this.percentage, false]);
 			// Vue.$toast.error(`error: there aren’t that many teams without a captain`);
 		},
 		goToTeammates() {
-			console.log('here');
+			this.$router.push({ name: 'SetTeammates' });
+			this.resetSumPercantageCounter();
 		}
 	}
 };

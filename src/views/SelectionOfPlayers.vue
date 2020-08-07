@@ -2,12 +2,12 @@
 	<div>
 		<v-main>
 			<div class="container">
-				<v-card-title>2. Select Players</v-card-title>
+				<v-card-title>4. Select Players</v-card-title>
 				<div class="players-wrap">
 					<v-checkbox
 						v-model="selected"
 						v-for="(player, index) in allPlayers" :key="index"
-						:label="getPlayerName(player)"
+						:label="getPlayerInfo(player)"
 						:value="player"
 					></v-checkbox>
 				</div>
@@ -30,14 +30,16 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['allPlayers'])
+		...mapState(['allPlayers']),
 	},
 
 	methods: {
-
+		getPlayerInfo(player) {
+			return `${this.getPlayerName(player)} / ${player.price} / ${player.position}`;
+		},
 		saveSelectedPlayersMethod() {
 			this.saveSelectedPlayers(this.selected);
-			this.$router.push({ name: 'TeamSize' });
+			this.$router.push({ name: 'CaptainRule' });
 		},
 		...mapActions(['saveSelectedPlayers'])
 	}

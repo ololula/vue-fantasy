@@ -35,10 +35,10 @@ export default {
 				FOR: 0
 			}, TODO */
 			positions: {
-				GK: 1,
-				DEF: 5,
-				MID: 2,
-				FOR: 3
+				goalkeeper: 1,
+				defender: 5,
+				midfielder: 2,
+				forward: 3
 			}
 		};
 	},

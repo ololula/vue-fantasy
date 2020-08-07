@@ -2,7 +2,7 @@
 	<div>
 		<v-main>
 			<div class="container">
-				<v-card-title>3. Set Captain Rule</v-card-title>
+				<v-card-title>5. Set Captain Rule</v-card-title>
 				<v-radio-group v-model="captain" :mandatory="false">
 					<v-radio v-for="player in players" :key="player.id" :label="getPlayerName(player)" :value="player"></v-radio>
 				</v-radio-group>

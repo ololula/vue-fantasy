@@ -50,6 +50,7 @@ export default {
 <style lang="scss">
 .container {
 	max-width: 800px;
+	margin: 0 auto;
 	.v-card__title { padding-left: 0; }
 	.player-card {
 		margin-top: 40px;
