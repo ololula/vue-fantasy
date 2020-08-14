@@ -8,6 +8,7 @@ import CaptainRule from '../views/CaptainRule.vue';
 import ViceCaptainRule from '../views/ViceCaptain.vue';
 import SetPositions from '../views/setPostions';
 import SetTeammates from '../views/setTeammates';
+import DisplayTeams from '../views/DisplayTeams';
 
 Vue.use(VueRouter);
 
@@ -51,6 +52,11 @@ const routes = [
 		path: '/stack',
 		name: 'SetTeammates',
 		component: SetTeammates
+	},
+	{
+		path: '/display-teams',
+		name: 'DisplayTeams',
+		component: DisplayTeams
 	}
 ];
 

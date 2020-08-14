@@ -21,7 +21,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 export default {
-	name: 'CaptainRule',
+	name: 'Teammates',
 	data() {
 		return {
 			selected: [],
@@ -41,7 +41,7 @@ export default {
 			this.setTeammates([this.selected, this.percentage]);
 		},
 		goTo() {
-			console.log('ff');
+			this.$router.push({ name: 'DisplayTeams' });
 		}
 	}
 };

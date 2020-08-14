@@ -104,8 +104,6 @@ export default new Vuex.Store({
 						// if you cannot find captain in this team, then position is available
 						isPlayerNotAlreadyInTeam = !state.teams[i].players.find(player => player.player !== '' && player.player.id === captainToSet.id);
 
-						console.log(isCaptainPositionAvailable);
-						console.log(!isCaptainPositionAvailable);
 						if (freePositionOnTeam && isPlayerAffordable && isCaptainPositionAvailable && isPlayerNotAlreadyInTeam) {
 							freePositionOnTeam.player = captainToSet;
 							isCaptainRule ? freePositionOnTeam.captain = true : freePositionOnTeam.viceCaptain = true;
@@ -127,82 +125,67 @@ export default new Vuex.Store({
 				Vue.$toast.info(`player ${captainToSet.firstName} will be captain in ${percentage} % of the teams`);
 		},
 		SET_TEAMMATES(state, [subTeamToSet, percentage]) {
-			console.log(subTeamToSet);
 			let isTeamHaveAvailableSpots;
 			let isTeamHaveBudget;
+			let duplicatePlayersInTeam;
 			let teamMatesSumBudget = 0;
-			state.sumOfCaptainPercentage += parseInt(percentage);
-			const numberOfTeamsToSetCaptain = Math.floor((state.numberOfCombinations * percentage) / 100);
-			if (state.sumOfCaptainPercentage <= 100) {
-				for (let i = 0; i < state.numberOfCombinations; i++) {
-					if (numberOfTeamsToSetCaptain === 0)
-						break;
-					else {
-						isTeamHaveAvailableSpots = state.teams[i].players.filter(playerInTeam => playerInTeam.player === '').length >= subTeamToSet.length;
-						subTeamToSet.forEach(teamMate => {
-							console.log(teamMate.price);
-							teamMatesSumBudget += teamMate.price;
-						});
-						isTeamHaveBudget = teamMatesSumBudget + state.teams[i].playersCost <= state.tournamentBudget;
-						console.log(teamMatesSumBudget);
-						console.log(isTeamHaveBudget);
-						console.log(isTeamHaveAvailableSpots);
-						/* if (isTeamHaveAvailableSpots) {
-							freePositionOnTeam.player = captainToSet;
-							isCaptainRule ? freePositionOnTeam.captain = true : freePositionOnTeam.viceCaptain = true;
-							state.teams[i].budget += captainToSet.price;
-							numberOfTeamsToSetCaptain--;
-						} */
-					}
-					// reset teammate cost
-					teamMatesSumBudget = 0;
-				}
-			}
-			else {
-				state.sumOfCaptainPercentage -= parseInt(percentage);
-				console.log(state.sumOfCaptainPercentage);
-				Vue.$toast.error(`error: percentage of teams without captain is ${100 - state.sumOfCaptainPercentage}`);
-			}
-			// check if condition is fulfilled
-			if (numberOfTeamsToSetCaptain > 0)
-				Vue.$toast.error("budget error: condition isn't fulfilled");
-			else
-				Vue.$toast.info(`player will be captain in ${percentage} % of the teams`);
-		}
-		/*		SET_CAPTAIN(state, [captainToSet, percentage, isCaptainRule]) {
-			// if it is vice captain rule, reset sumOfCaptainPercentage counter
-			let captainInCurrentTeam;
-			let isPlayerAffordable;
-			state.sumOfCaptainPercentage += parseInt(percentage);
 			let numberOfTeamsToSetCaptain = Math.floor((state.numberOfCombinations * percentage) / 100);
-			if (state.sumOfCaptainPercentage <= 100) {
-				for (let i = 0; i < state.numberOfCombinations; i++) {
-					if (numberOfTeamsToSetCaptain === 0)
-						break;
-					else {
-						console.log(isCaptainRule);
-						captainInCurrentTeam = state.teams[i].players.find(player => isCaptainRule ? player.captain : player.viceCaptain);
-						console.log(captainInCurrentTeam);
-						isPlayerAffordable = state.teams[i].budget + captainToSet.price <= state.tournamentBudget;
-						if (captainInCurrentTeam.player === '' && isPlayerAffordable) {
-							captainInCurrentTeam.player = captainToSet;
-							state.teams[i].budget += captainToSet.price;
+			const numberOfTeamsToSetCaptainOrigin = numberOfTeamsToSetCaptain;
+			console.log('postavi kapitena na', numberOfTeamsToSetCaptain);
+			for (let i = 0; i < state.numberOfCombinations; i++) {
+				if (numberOfTeamsToSetCaptain === 0)
+					break;
+				else {
+					isTeamHaveAvailableSpots = state.teams[i].players.filter(playerInTeam => playerInTeam.player === '').length >= subTeamToSet.length;
+					subTeamToSet.forEach(teamMate => {
+						teamMatesSumBudget += teamMate.price;
+					});
+					isTeamHaveBudget = teamMatesSumBudget + state.teams[i].playersCost <= state.tournamentBudget;
+
+					for (let j = 0; j < subTeamToSet.length; j++) {
+						duplicatePlayersInTeam = false;
+						duplicatePlayersInTeam = state.teams[i].players.findIndex(playerInTeam => {
+							// player is set and ids are matching = playerToSet is already in that team, break;
+							return playerInTeam.player && playerInTeam.player.id === subTeamToSet[j].id;
+						});
+						console.log('duplikat po teammate', duplicatePlayersInTeam);
+						if (duplicatePlayersInTeam >= 0)
+							break;
+					}
+
+					let freeSpaceInTeamIndex;
+					let successCounter = 0;
+					console.log('ima li budzet', isTeamHaveBudget);
+					console.log('ima li mesta', isTeamHaveAvailableSpots);
+					console.log('nema duplkata', duplicatePlayersInTeam < 0);
+					if (isTeamHaveBudget && isTeamHaveAvailableSpots && duplicatePlayersInTeam < 0) {
+						const teamBackup = JSON.parse(JSON.stringify(state.teams[i]));
+						for (let j = 0; j < subTeamToSet.length; j++) {
+							freeSpaceInTeamIndex = teamBackup.players.findIndex(playerInTeam => {
+								return playerInTeam.position === subTeamToSet[j].position && playerInTeam.player === '';
+							});
+							if (freeSpaceInTeamIndex >= 0) {
+								teamBackup.players[freeSpaceInTeamIndex].player = JSON.parse(JSON.stringify(subTeamToSet[j]));
+								successCounter++;
+							}
+						}
+						// check if all teammates are assigned
+						console.log('successCounter', successCounter);
+						if (successCounter === subTeamToSet.length) {
+							state.teams[i] = JSON.parse(JSON.stringify(teamBackup));
 							numberOfTeamsToSetCaptain--;
+							state.teams[i].playersCost += teamMatesSumBudget;
+							console.log('NEW TEAM', state.teams[i]);
 						}
 					}
 				}
+				// reset teammate cost
+				teamMatesSumBudget = 0;
 			}
-			else {
-				state.sumOfCaptainPercentage -= parseInt(percentage);
-				console.log(state.sumOfCaptainPercentage);
-				Vue.$toast.error(`error: percentage of teams without captain is ${100 - state.sumOfCaptainPercentage}`);
-			}
+
 			// check if condition is fulfilled
-			if (numberOfTeamsToSetCaptain > 0)
-				Vue.$toast.error("budget error: condition isn't fulfilled");
-			else
-				Vue.$toast.info(`player ${captainToSet.firstName} will be captain in ${percentage} % of the teams`);
-		} */
+			Vue.$toast.info(`stack is set in ${numberOfTeamsToSetCaptainOrigin - numberOfTeamsToSetCaptain} teams`);
+		}
 	},
 	actions: {
 		setNumberOfPostions({ commit }, positions) {

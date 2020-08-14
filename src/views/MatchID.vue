@@ -33,7 +33,7 @@ export default {
 
 			// axios.getTournamentData(this.matchId).then((response) => {
 			// axios.getTournamentData('291187').then((response) => { nba
-			axios.getTournamentData('291852').then((response) => {
+			axios.getTournamentData('291187').then((response) => {
 				if (response.data.playerChoices) {
 					this.setPlayers([response.data.playerChoices, response.data.tournament]);
 					this.$router.push({ name: 'SetPositions' });
